@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pautang Ko — Loan Records & SMS Reminders</title>
+<!-- PWA Core -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ea580c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Pautang Ko">
+<meta name="description" content="Your trusted loan record book — track loans, compute interest, send SMS reminders.">
+<!-- Icons -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23ea580c' rx='20' width='100' height='100'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white'>🤝</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23ea580c' rx='30' width='180' height='180'/><text x='90' y='120' font-size='90' text-anchor='middle' fill='white'>🤝</text></svg>">
+<!-- Fonts & Icons -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4/fonts/remixicon.css">
+<style>
+  :root{
+    --bg:#fefcf8;
+    --card:#ffffff;
+    --text:#2b1d12;
+    --muted:#8a7a6a;
+    --accent:#ea580c;
+    --accent-soft:rgba(234,88,12,.12);
+    --accent2:#16a34a;
+    --accent2-soft:rgba(22,163,74,.12);
+    --gold:#f59e0b;
+    --gold-soft:rgba(245,158,11,.16);
+    --danger:#dc2626;
+    --danger-soft:rgba(220,38,38,.10);
+    --border:rgba(120,80,40,.14);
+    --shadow:0 1px 3px rgba(120,70,20,.08), 0 6px 20px rgba(120,70,20,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Quicksand',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.55;
+    min-height:100vh;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(234,88,12,.035) 0 2px, transparent 2px 14px),
+      repeating-linear-gradient(-45deg, rgba(245,158,11,.03) 0 2px, transparent 2px 14px);
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
+  header.hero{
+    position:relative;
+    background:linear-gradient(135deg,#fff7ed 0%,#fef3c7 55%,#fde68a 100%);
+    border-bottom:3px solid var(--gold);
+    overflow:hidden;
+    margin-bottom:28px;
+  }
+  .hero-inner{max-width:1080px;margin:0 auto;padding:34px 20px 30px;position:relative;z-index:2}
+  .sun{
+    position:absolute;top:-40px;right:-30px;width:220px;height:220px;opacity:.55;
+    animation:spin 60s linear infinite;pointer-events:none;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .brand{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+  .brand-badge{
+    width:52px;height:52px;border-radius:16px;background:var(--accent);
+    display:flex;align-items:center;justify-content:center;color:#fff;
+    box-shadow:0 6px 16px rgba(234,88,12,.35);flex-shrink:0;
+  }
+  .brand-badge i{font-size:26px}
+  h1{font-size:clamp(26px,4vw,36px);font-weight:700;letter-spacing:-.5px;color:#7c2d12}
+  .tagline{color:#92400e;font-weight:500;font-size:15px;max-width:560px}
+  .hero-stats-note{margin-top:14px;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.7);border:1px solid var(--border);padding:7px 14px;border-radius:999px;font-size:13px;color:#7c2d12;font-weight:600}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:26px}
+  .stat{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 18px 16px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .2s;
+  }
+  .stat:hover{transform:translateY(-2px)}
+  .stat::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--gold)}
+  .stat.green::before{background:var(--accent2)}
+  .stat.orange::before{background:var(--accent)}
+  .stat.red::before{background:var(--danger)}
+  .stat-label{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+  .stat-label i{font-size:16px}
+  .stat-value{font-size:26px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+  .stat-sub{font-size:12px;color:var(--muted);margin-top:3px}
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+  .search{flex:1;min-width:200px;position:relative;}
+  .search input{
+    width:100%;padding:11px 14px 11px 40px;border-radius:12px;border:1px solid var(--border);
+    background:var(--card);font-family:inherit;font-size:14px;font-weight:500;color:var(--text);outline:none;transition:border .2s,box-shadow .2s;
+  }
+  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .search i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:17px}
+  .tabs{display:flex;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px;flex-wrap:wrap}
+  .tab{
+    border:none;background:transparent;padding:8px 14px;border-radius:9px;font-family:inherit;
+    font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:6px;
+  }
+  .tab.active{background:var(--accent);color:#fff;box-shadow:0 3px 10px rgba(234,88,12,.3)}
+  .tab .count{background:rgba(0,0,0,.1);padding:1px 7px;border-radius:99px;font-size:11px}
+  .tab.active .count{background:rgba(255,255,255,.25)}
+  .btn{
+    border:none;border-radius:12px;padding:11px 18px;font-family:inherit;font-size:14px;font-weight:700;
+    cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .18s;white-space:nowrap;
+  }
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(234,88,12,.35)}
+  .btn-primary:hover{background:#c2410c;transform:translateY(-1px)}
+  .btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+  .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-green{background:var(--accent2);color:#fff;box-shadow:0 4px 14px rgba(22,163,74,.3)}
+  .btn-green:hover{background:#15803d}
+  .btn-ghost{background:transparent;color:var(--muted);padding:8px 10px}
+  .btn-ghost:hover{color:var(--accent);background:var(--accent-soft)}
+  .btn-danger-ghost{background:transparent;color:var(--danger);padding:8px 10px}
+  .btn-danger-ghost:hover{background:var(--danger-soft)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .loan-list{display:grid;gap:14px}
+  .loan-card{
+    background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;
+    box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;border-left:5px solid var(--gold);
+  }
+  .loan-card:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(120,70,20,.1),0 12px 30px rgba(120,70,20,.08)}
+  .loan-card.paid{border-left-color:var(--accent2);opacity:.82}
+  .loan-card.overdue{border-left-color:var(--danger)}
+  .loan-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .loan-who h3{font-size:17px;font-weight:700;color:var(--text)}
+  .loan-who .phone{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-top:2px;font-weight:500}
+  .pill{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+  .pill.pending{background:var(--gold-soft);color:#92400e;border:1px solid rgba(245,158,11,.3)}
+  .pill.paid{background:var(--accent2-soft);color:#15803d;border:1px solid rgba(22,163,74,.3)}
+  .pill.overdue{background:var(--danger-soft);color:var(--danger);border:1px solid rgba(220,38,38,.25)}
+  .amounts{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:12px 0;background:#fffaf3;border:1px dashed var(--border);border-radius:12px;padding:12px}
+  .amt small{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+  .amt b{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+  .amt.total b{color:var(--accent);font-size:17px}
+  .amt.balance b{color:var(--accent2)}
+  .loan-meta{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:12px}
+  .loan-meta span{display:inline-flex;align-items:center;gap:5px}
+  .loan-actions{display:flex;flex-wrap:wrap;gap:8px;padding-top:12px;border-top:1px solid var(--border)}
+  .icon-btn{
+    border:1px solid var(--border);background:var(--card);border-radius:10px;padding:8px 12px;
+    font-family:inherit;font-size:12.5px;font-weight:600;color:var(--text);cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;transition:all .15s;
+  }
+  .icon-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+  .icon-btn.sms{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .icon-btn.sms:hover{background:#15803d;color:#fff}
+  .icon-btn.del:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+  .empty{
+    text-align:center;padding:60px 24px;background:var(--card);border:2px dashed var(--border);border-radius:20px;
+  }
+  .empty-icon{width:72px;height:72px;margin:0 auto 16px;border-radius:50%;background:var(--gold-soft);display:flex;align-items:center;justify-content:center;color:var(--gold)}
+  .empty-icon i{font-size:34px}
+  .empty h3{font-size:19px;margin-bottom:6px;color:var(--text)}
+  .empty p{color:var(--muted);font-size:14px;max-width:420px;margin:0 auto 18px}
+  .empty-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(60,30,10,.45);backdrop-filter:blur(3px);
+    display:none;align-items:flex-start;justify-content:center;z-index:100;padding:20px 14px;overflow-y:auto;
+  }
+  .modal-overlay.open{display:flex;animation:fadeIn .2s}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .modal{
+    background:var(--card);border-radius:20px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.25);
+    animation:slideUp .25s cubic-bezier(.2,.9,.3,1.2);margin:auto;overflow:hidden;
+  }
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .modal-head{
+    padding:18px 22px;background:linear-gradient(135deg,#fff7ed,#fef3c7);border-bottom:1px solid var(--border);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .modal-head h2{font-size:18px;font-weight:700;color:#7c2d12;display:flex;align-items:center;gap:9px}
+  .modal-head h2 i{color:var(--accent)}
+  .close-x{border:none;background:transparent;font-size:22px;color:var(--muted);cursor:pointer;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+  .close-x:hover{background:var(--danger-soft);color:var(--danger)}
+  .modal-body{padding:22px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+  .field input,.field select,.field textarea{
+    width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--border);background:#fffdf9;
+    font-family:inherit;font-size:14px;color:var(--text);outline:none;transition:border .2s,box-shadow .2s;font-weight:500;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .calc-preview{
+    background:var(--accent2-soft);border:1px solid rgba(22,163,74,.3);border-radius:12px;padding:12px 14px;
+    margin:6px 0 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  }
+  .calc-preview small{font-size:12px;font-weight:600;color:#15803d}
+  .calc-preview b{font-size:17px;font-weight:700;color:#15803d;font-variant-numeric:tabular-nums}
+  .modal-foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:#fffdf9}
+  .sms-to{background:#fffaf3;border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:13.5px;font-weight:600;color:var(--text)}
+  .sms-to b{color:var(--accent)}
+  .tpl-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+  .tpl-btn{
+    border:1px solid var(--border);background:var(--card);border-radius:10px;padding:9px 6px;font-family:inherit;
+    font-size:11.5px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:3px;
+  }
+  .tpl-btn i{font-size:17px}
+  .tpl-btn.active{border-color:var(--accent2);background:var(--accent2-soft);color:#15803d}
+  #smsText{min-height:140px;resize:vertical;line-height:1.6}
+  .sms-hint{font-size:11.5px;color:var(--muted);margin-top:8px;display:flex;align-items:flex-start;gap:6px}
+  .sms-hint i{flex-shrink:0;margin-top:1px}
+  .pay-hist{margin-top:14px}
+  .pay-hist h4{font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+  .pay-item{display:flex;justify-content:space-between;font-size:13px;padding:7px 10px;background:#fffaf3;border-radius:8px;margin-bottom:5px;font-weight:600}
+  .pay-item .date{color:var(--muted);font-weight:500}
+  .footer-note{text-align:center;margin-top:36px;font-size:12px;color:var(--muted);font-weight:500}
+  .footer-note i{color:var(--gold)}
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:#2b1d12;color:#fff;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:200;opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast i{color:var(--gold)}
+  .lock-overlay{
+    position:fixed;inset:0;z-index:300;
+    background:linear-gradient(135deg,#fff7ed 0%,#fef3c7 55%,#fde68a 100%);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .lock-overlay.hidden{display:none}
+  .lock-card{
+    background:#fff;border-radius:20px;padding:32px 28px;max-width:360px;width:100%;
+    text-align:center;box-shadow:0 20px 60px rgba(120,70,20,.25);border:1px solid var(--border);
+  }
+  .lock-card .sun-icon{
+    width:64px;height:64px;margin:0 auto 14px;border-radius:50%;background:var(--gold-soft);
+    display:flex;align-items:center;justify-content:center;color:var(--accent);
+  }
+  .lock-card .sun-icon i{font-size:30px}
+  .lock-card h2{font-size:21px;color:#7c2d12;margin-bottom:4px;font-weight:700}
+  .lock-card p{font-size:13px;color:var(--muted);margin-bottom:18px;font-weight:500}
+  .pin-input{
+    width:100%;padding:14px;font-size:26px;text-align:center;letter-spacing:14px;
+    border:2px solid var(--border);border-radius:12px;font-family:inherit;font-weight:700;
+    outline:none;margin-bottom:10px;color:var(--text);
+  }
+  .pin-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .lock-error{color:var(--danger);font-size:12.5px;font-weight:700;min-height:20px;margin-bottom:6px}
+  .forgot-link{
+    background:none;border:none;color:var(--muted);font-family:inherit;font-size:12px;
+    text-decoration:underline;cursor:pointer;margin-top:12px;font-weight:600;
+  }
+  .forgot-link:hover{color:var(--accent)}
+  .install-prompt{position:fixed;bottom:20px;left:20px;right:20px;background:#fff;border-radius:16px;padding:14px 18px;box-shadow:0 10px 30px rgba(0,0,0,.15);z-index:500;display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:1px solid var(--border)}
+  .install-prompt.show{display:flex}
+  @media (max-width:560px){
+    .field-row{grid-template-columns:1fr}
+    .tpl-btns{grid-template-columns:1fr}
+    .stat-value{font-size:22px}
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <svg class="sun" viewBox="0 0 200 200" fill="none">
+    <circle cx="100" cy="100" r="42" fill="#fbbf24"/>
+    <g stroke="#f59e0b" stroke-width="6" stroke-linecap="round">
+      <line x1="100" y1="18" x2="100" y2="42"/><line x1="100" y1="158" x2="100" y2="182"/>
+      <line x1="18" y1="100" x2="42" y2="100"/><line x1="158" y1="100" x2="182" y2="100"/>
+      <line x1="42" y1="42" x2="59" y2="59"/><line x1="141" y1="141" x2="158" y2="158"/>
+      <line x1="158" y1="42" x2="141" y2="59"/><line x1="59" y1="141" x2="42" y2="158"/>
+    </g>
+  </svg>
+  <div class="hero-inner">
+    <div class="brand">
+      <div class="brand-badge"><i class="ri-hand-heart-line"></i></div>
+      <div>
+        <h1>Pautang Ko</h1>
+        <p class="tagline">Your trusted loan record book — warm reminders, one tap away. Track every loan, interest, and payment. Send gentle SMS reminders in a single click.</p>
+      </div>
+    </div>
+    <span class="hero-stats-note"><i class="ri-shield-check-line"></i> Records are saved privately on this device. Tap <b>Backup</b> to keep a copy.</span>
+  </div>
+</header>
+<div class="wrap">
+  <div class="stats" id="stats"></div>
+  <div class="toolbar">
+    <div class="search">
+      <i class="ri-search-line"></i>
+      <input type="text" id="searchInput" placeholder="Search borrower name...">
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-filter="all">All <span class="count" id="cAll">0</span></button>
+      <button class="tab" data-filter="pending">Pending <span class="count" id="cPending">0</span></button>
+      <button class="tab" data-filter="overdue">Overdue <span class="count" id="cOverdue">0</span></button>
+      <button class="tab" data-filter="paid">Paid <span class="count" id="cPaid">0</span></button>
+    </div>
+    <button class="btn btn-secondary" id="backupBtn"><i class="ri-save-3-line"></i> Backup</button>
+    <button class="btn btn-secondary" id="restoreBtn"><i class="ri-inbox-archive-line"></i> Restore</button>
+    <button class="btn btn-secondary" id="pinBtn"><i class="ri-lock-2-line"></i> PIN Lock</button>
+    <button class="btn btn-secondary" id="exportBtn"><i class="ri-download-2-line"></i> Export CSV</button>
+    <button class="btn btn-primary" id="addBtn"><i class="ri-add-line"></i> Add Loan</button>
+    <input type="file" id="restoreFile" accept=".json,application/json" style="display:none">
+  </div>
+  <div class="loan-list" id="loanList"></div>
+  <p class="footer-note"><i class="ri-sun-line"></i> Built with warmth for Filipino lenders — Maraming salamat po!</p>
+</div>
+
+<!-- Install Prompt -->
+<div class="install-prompt" id="installPrompt">
+  <strong>📲 Install Pautang Ko</strong>
+  <span>Use offline & faster access</span>
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-green" id="installBtn">Install</button>
+    <button class="btn btn-secondary" id="dismissInstall">Later</button>
+  </div>
+</div>
+
+<!-- Modals follow exactly as your original code -->
+<!-- Add / Edit Loan Modal -->
+<div class="modal-overlay" id="loanModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2><i class="ri-file-add-line"></i> <span id="loanModalTitle">Add New Loan</span></h2>
+      <button class="close-x" data-close="loanModal"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="f_id">
+      <div class="field">
+        <label>Borrower Name</label>
+        <input type="text" id="f_name" placeholder="e.g. Maria Santos" required>
+      </div>
+      <div class="field">
+        <label>Phone Number (for SMS reminders)</label>
+        <input type="tel" id="f_phone" placeholder="e.g. 0917 123 4567" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Principal Amount (₱)</label>
+          <input type="number" id="f_principal" min="0" step="any" placeholder="5000" required>
+        </div>
+        <div class="field">
+          <label>Interest Rate (%)</label>
+          <input type="number" id="f_rate" min="0" step="any" value="5" placeholder="5">
+        </div>
+      </div>
+      <div class="field">
+        <label>Interest Type</label>
+        <select id="f_rateType">
+          <option value="one">One-time (fixed % of principal)</option>
+          <option value="month" selected>Per month</option>
+          <option value="year">Per year</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Date Lent</label>
+          <input type="date" id="f_dateLent" required>
+        </div>
+        <div class="field">
+          <label>Due Date</label>
+          <input type="date" id="f_dueDate" required>
+        </div>
+      </div>
+      <div class="calc-preview" id="calcPreview">
+        <small><i class="ri-calculator-line"></i> Auto-computed</small>
+        <b id="calcText">₱0.00 total</b>
+      </div>
+      <div class="field">
+        <label>Notes (optional)</label>
+        <textarea id="f_notes" rows="2" placeholder="e.g. For sari-sari store restock"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close="loanModal">Cancel</button>
+      <button class="btn btn-primary" id="saveLoanBtn">Save Loan</button>
+    </div>
+  </div>
+</div>
+
+<!-- SMS Modal -->
+<div class="modal-overlay" id="smsModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2><i class="ri-message-3-line"></i> Send SMS Reminder</h2>
+      <button class="close-x" data-close="smsModal"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="sms-to">To: <b id="smsToName"></b> · <span id="smsToPhone"></span></div>
+      <div class="tpl-btns">
+        <button class="tpl-btn active" data-tpl="upcoming"><i class="ri-calendar-check-line"></i> Upcoming</button>
+        <button class="tpl-btn" data-tpl="overdue"><i class="ri-alarm-warning-line"></i> Past Due</button>
+        <button class="tpl-btn" data-tpl="confirm"><i class="ri-checkbox-circle-line"></i> Payment Confirmed</button>
+      </div>
+      <div class="field">
+        <label>Message</label>
+        <textarea id="smsText"></textarea>
+      </div>
+      <div class="sms-hint">Standard SMS rates apply. Your messaging app opens with pre-filled text.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" id="copyMsgBtn">Copy Text</button>
+      <button class="btn btn-green" id="sendSmsBtn">Open SMS App</button>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2><i class="ri-money-dollar-circle-line"></i> Record Payment</h2>
+      <button class="close-x" data-close="payModal"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="p_id">
+      <div class="sms-to">Borrower: <b id="p_name"></b> · Balance: <b id="p_balance"></b></div>
+      <div class="field-row">
+        <div class="field">
+          <label>Amount Paid (₱)</label>
+          <input type="number" id="p_amount" min="0" step="any" required>
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="p_date" required>
+        </div>
+      </div>
+      <div class="pay-hist" id="payHist"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close="payModal">Cancel</button>
+      <button class="btn btn-green" id="savePayBtn">Record Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- PIN Lock Screen -->
+<div class="lock-overlay hidden" id="lockScreen">
+  <div class="lock-card">
+    <div class="sun-icon"><i class="ri-lock-2-line"></i></div>
+    <h2>Pautang Ko</h2>
+    <p>Enter PIN to open your record book</p>
+    <input type="password" id="lockPin" class="pin-input" inputmode="numeric" maxlength="6" placeholder="••••">
+    <div class="lock-error" id="lockError"></div>
+    <button class="btn btn-primary" id="unlockBtn" style="width:100%">Unlock</button>
+    <button class="forgot-link" id="forgotPinBtn">Forgot PIN?</button>
+  </div>
+</div>
+
+<!-- PIN Modal -->
+<div class="modal-overlay" id="pinModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head">
+      <h2><i class="ri-lock-2-line"></i> <span id="pinModalTitle">PIN Lock</span></h2>
+      <button class="close-x" data-close="pinModal"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="field" id="pinCurrentField" style="display:none">
+        <label>Current PIN</label>
+        <input type="password" id="pinCurrent" inputmode="numeric" maxlength="6">
+      </div>
+      <div class="field">
+        <label>New PIN (4–6 digits)</label>
+        <input type="password" id="pinNew" inputmode="numeric" maxlength="6">
+      </div>
+      <div class="field">
+        <label>Confirm New PIN</label>
+        <input type="password" id="pinConfirm" inputmode="numeric" maxlength="6">
+      </div>
+      <div class="sms-hint">⚠️ If you forget your PIN, records can't be recovered. Always keep a Backup.</div>
+      <button class="forgot-link" id="removePinBtn" style="display:none">Remove PIN lock</button>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close="pinModal">Cancel</button>
+      <button class="btn btn-primary" id="savePinBtn">Save PIN</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="ri-checkbox-circle-fill"></i> <span id="toastMsg"></span></div>
+
+<script>
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('Pautang Ko SW registered'))
+      .catch(err => console.log('SW registration failed:', err));
+  });
+}
+
+// Install prompt
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installPrompt').classList.add('show');
+});
+document.getElementById('installBtn')?.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('installPrompt').classList.remove('show');
+});
+document.getElementById('dismissInstall')?.addEventListener('click', () => {
+  document.getElementById('installPrompt').classList.remove('show');
+});
+
+(function(){
+  "use strict";
+  var STORAGE_KEY = "pautangKo_loans_v1";
+  var loans = [];
+  var currentFilter = "all";
+  var searchQuery = "";
+  var smsLoanId = null;
+  var smsTpl = "upcoming";
+  
+  function $(id){ return document.getElementById(id); }
+  function fmt(n){
+    n = Number(n) || 0;
+    return "₱" + n.toLocaleString("en-PH", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  }
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function addDays(dateStr, days){
+    var d = new Date(dateStr + "T00:00:00");
+    d.setDate(d.getDate() + days);
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+  function esc(s){
+    var div = document.createElement("div");
+    div.textContent = s == null ? "" : String(s);
+    return div.innerHTML;
+  }
+  function toast(msg){
+    var t = $("toast");
+    $("toastMsg").textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function(){ t.classList.remove("show"); }, 2600);
+  }
+  
+  function calcLoan(L){
+    var principal = Number(L.principal) || 0;
+    var rate = Number(L.rate) || 0;
+    var lent = new Date(L.dateLent + "T00:00:00");
+    var due = new Date(L.dueDate + "T00:00:00");
+    var termDays = Math.max(0, (due - lent) / 86400000);
+    var interest = 0;
+    if (L.rateType === "one") interest = principal * rate / 100;
+    else if (L.rateType === "month") interest = principal * rate / 100 * Math.max(1, termDays / 30.44);
+    else interest = principal * rate / 100 * (termDays / 365);
+    interest = Math.round(interest * 100) / 100;
+    var total = principal + interest;
+    var paid = (L.payments || []).reduce(function(s,p){ return s + (Number(p.amount)||0); }, 0);
+    var balance = Math.max(0, total - paid);
+    var now = new Date(todayStr() + "T00:00:00");
+    var daysOverdue = Math.floor((now - due) / 86400000);
+    var status = (balance <= 0.01) ? "paid" : (daysOverdue > 0 ? "overdue" : "pending");
+    return {interest:interest, total:total, paid:paid, balance:balance, status:status, daysOverdue:daysOverdue, termDays:termDays};
+  }
+  
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(loans)); } catch(e){}
+  }
+  function load(){
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) loans = JSON.parse(raw) || [];
+    } catch(e){ loans = []; }
+  }
+  
+  function renderStats(){
+    var totPrincipal = 0, totInterest = 0, totPending = 0, totCollected = 0;
+    var counts = {all:0, pending:0, overdue:0, paid:0};
+    loans.forEach(function(L){
+      var c = calcLoan(L);
+      totPrincipal += Number(L.principal) || 0;
+      totInterest += c.interest;
+      totCollected += c.paid;
+      if (c.status !== "paid") totPending += c.balance;
+      counts.all++;
+      counts[c.status]++;
+    });
+    $("stats").innerHTML =
+      '<div class="stat orange"><div class="stat-label"><i class="ri-wallet-3-line"></i> Total Lent</div><div class="stat-value">'+fmt(totPrincipal)+'</div><div class="stat-sub">'+counts.all+' loan(s)</div></div>' +
+      '<div class="stat"><div class="stat-label"><i class="ri-percent-line"></i> Interest Due</div><div class="stat-value">'+fmt(totInterest)+'</div><div class="stat-sub">auto-computed</div></div>' +
+      '<div class="stat red"><div class="stat-label"><i class="ri-time-line"></i> Pending to Collect</div><div class="stat-value">'+fmt(totPending)+'</div><div class="stat-sub">'+counts.overdue+' overdue</div></div>' +
+      '<div class="stat green"><div class="stat-label"><i class="ri-hand-coin-line"></i> Collected</div><div class="stat-value">'+fmt(totCollected)+'</div><div class="stat-sub">'+counts.paid+' fully paid</div></div>';
+    $("cAll").textContent = counts.all;
+    $("cPending").textContent = counts.pending;
+    $("cOverdue").textContent = counts.overdue;
+    $("cPaid").textContent = counts.paid;
+  }
+  
+  function renderList(){
+    var list = $("loanList");
+    var filtered = loans.filter(function(L){
+      var c = calcLoan(L);
+      if (currentFilter !== "all" && c.status !== currentFilter) return false;
+      if (searchQuery && L.name.toLowerCase().indexOf(searchQuery) === -1) return false;
+      return true;
+    });
+    filtered.sort(function(a,b){
+      var ca = calcLoan(a), cb = calcLoan(b);
+      var rank = {overdue:0, pending:1, paid:2};
+      if (rank[ca.status] !== rank[cb.status]) return rank[ca.status] - rank[cb.status];
+      return (a.dueDate < b.dueDate ? -1 : a.dueDate > b.dueDate ? 1 : 0);
+    });
+    if (filtered.length === 0){
+      var isEmpty = loans.length === 0;
+      list.innerHTML =
+        '<div class="empty">' +
+          '<div class="empty-icon"><i class="ri-book-open-line"></i></div>' +
+          '<h3>'+(isEmpty ? "Your record book is empty" : "No loans match this view")+'</h3>' +
+          '<p>'+(isEmpty ? "Add your first loan — interest & totals auto-calculated." : "Try a different filter or clear search.")+'</p>' +
+          '<div class="empty-actions">' +
+            (isEmpty ? '<button class="btn btn-primary" id="emptyAdd"><i class="ri-add-line"></i> Add First Loan</button>' +
+             '<button class="btn btn-secondary" id="loadSample"><i class="ri-flashlight-line"></i> Load Sample Data</button>' : '') +
+          '</div>' +
+        '</div>';
+      var ea = $("emptyAdd"); if (ea) ea.addEventListener("click", function(){ openLoanModal(null); });
+      var ls = $("loadSample"); if (ls) ls.addEventListener("click", loadSample);
+      return;
+    }
+    list.innerHTML = filtered.map(function(L){
+      var c = calcLoan(L);
+      var statusPill = c.status === "paid"
+        ? '<span class="pill paid"><i class="ri-checkbox-circle-fill"></i> Paid</span>'
+        : c.status === "overdue"
+        ? '<span class="pill overdue"><i class="ri-alarm-warning-fill"></i> Overdue '+c.daysOverdue+'d</span>'
+        : '<span class="pill pending"><i class="ri-time-line"></i> Pending</span>';
+      var notesLine = L.notes ? '<div class="loan-meta"><span><i class="ri-sticky-note-line"></i> '+esc(L.notes)+'</span></div>' : '';
+      return (
+      '<div class="loan-card '+c.status+'" data-id="'+L.id+'">' +
+        '<div class="loan-top">' +
+          '<div class="loan-who"><h3>'+esc(L.name)+'</h3><div class="phone"><i class="ri-phone-line"></i> '+esc(L.phone)+'</div></div>' +
+          statusPill +
+        '</div>' +
+        '<div class="amounts">' +
+          '<div class="amt"><small>Principal</small><b>'+fmt(L.principal)+'</b></div>' +
+          '<div class="amt"><small>Interest</small><b>'+fmt(c.interest)+'</b></div>' +
+          '<div class="amt total"><small>Total Due</small><b>'+fmt(c.total)+'</b></div>' +
+          '<div class="amt balance"><small>Balance</small><b>'+fmt(c.balance)+'</b></div>' +
+        '</div>' +
+        '<div class="loan-meta">' +
+          '<span><i class="ri-calendar-line"></i> Lent: '+L.dateLent+'</span>' +
+          '<span><i class="ri-calendar-check-line"></i> Due: '+L.dueDate+'</span>' +
+          '<span><i class="ri-percent-line"></i> '+Number(L.rate)+'% '+(L.rateType==="one"?"one-time":L.rateType==="month"?"/month":"/year")+'</span>' +
+          (c.paid>0 ? '<span><i class="ri-hand-coin-line"></i> Paid: '+fmt(c.paid)+'</span>' :
