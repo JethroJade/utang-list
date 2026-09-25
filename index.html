@@ -4,17 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pautang Ko — Loan Records & SMS Reminders</title>
-<!-- PWA Core -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ea580c">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Pautang Ko">
-<meta name="description" content="Your trusted loan record book — track loans, compute interest, send SMS reminders.">
-<!-- Icons -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23ea580c' rx='20' width='100' height='100'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white'>🤝</text></svg>">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23ea580c' rx='30' width='180' height='180'/><text x='90' y='120' font-size='90' text-anchor='middle' fill='white'>🤝</text></svg>">
-<!-- Fonts & Icons -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -44,11 +33,14 @@
     color:var(--text);
     line-height:1.55;
     min-height:100vh;
+    /* subtle woven banig pattern */
     background-image:
       repeating-linear-gradient(45deg, rgba(234,88,12,.035) 0 2px, transparent 2px 14px),
       repeating-linear-gradient(-45deg, rgba(245,158,11,.03) 0 2px, transparent 2px 14px);
   }
   .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
+
+  /* ---------- Header ---------- */
   header.hero{
     position:relative;
     background:linear-gradient(135deg,#fff7ed 0%,#fef3c7 55%,#fde68a 100%);
@@ -72,6 +64,8 @@
   h1{font-size:clamp(26px,4vw,36px);font-weight:700;letter-spacing:-.5px;color:#7c2d12}
   .tagline{color:#92400e;font-weight:500;font-size:15px;max-width:560px}
   .hero-stats-note{margin-top:14px;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.7);border:1px solid var(--border);padding:7px 14px;border-radius:999px;font-size:13px;color:#7c2d12;font-weight:600}
+
+  /* ---------- Stats ---------- */
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:26px}
   .stat{
     background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 18px 16px;
@@ -86,8 +80,12 @@
   .stat-label i{font-size:16px}
   .stat-value{font-size:26px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
   .stat-sub{font-size:12px;color:var(--muted);margin-top:3px}
+
+  /* ---------- Toolbar ---------- */
   .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
-  .search{flex:1;min-width:200px;position:relative;}
+  .search{
+    flex:1;min-width:200px;position:relative;
+  }
   .search input{
     width:100%;padding:11px 14px 11px 40px;border-radius:12px;border:1px solid var(--border);
     background:var(--card);font-family:inherit;font-size:14px;font-weight:500;color:var(--text);outline:none;transition:border .2s,box-shadow .2s;
@@ -117,6 +115,8 @@
   .btn-danger-ghost{background:transparent;color:var(--danger);padding:8px 10px}
   .btn-danger-ghost:hover{background:var(--danger-soft)}
   .btn:disabled{opacity:.5;cursor:not-allowed}
+
+  /* ---------- Loan cards ---------- */
   .loan-list{display:grid;gap:14px}
   .loan-card{
     background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;
@@ -149,6 +149,8 @@
   .icon-btn.sms{background:var(--accent2);color:#fff;border-color:var(--accent2)}
   .icon-btn.sms:hover{background:#15803d;color:#fff}
   .icon-btn.del:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+
+  /* ---------- Empty state ---------- */
   .empty{
     text-align:center;padding:60px 24px;background:var(--card);border:2px dashed var(--border);border-radius:20px;
   }
@@ -157,6 +159,8 @@
   .empty h3{font-size:19px;margin-bottom:6px;color:var(--text)}
   .empty p{color:var(--muted);font-size:14px;max-width:420px;margin:0 auto 18px}
   .empty-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+  /* ---------- Modal ---------- */
   .modal-overlay{
     position:fixed;inset:0;background:rgba(60,30,10,.45);backdrop-filter:blur(3px);
     display:none;align-items:flex-start;justify-content:center;z-index:100;padding:20px 14px;overflow-y:auto;
@@ -192,6 +196,8 @@
   .calc-preview small{font-size:12px;font-weight:600;color:#15803d}
   .calc-preview b{font-size:17px;font-weight:700;color:#15803d;font-variant-numeric:tabular-nums}
   .modal-foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:#fffdf9}
+
+  /* SMS modal */
   .sms-to{background:#fffaf3;border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:13.5px;font-weight:600;color:var(--text)}
   .sms-to b{color:var(--accent)}
   .tpl-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
@@ -204,12 +210,16 @@
   #smsText{min-height:140px;resize:vertical;line-height:1.6}
   .sms-hint{font-size:11.5px;color:var(--muted);margin-top:8px;display:flex;align-items:flex-start;gap:6px}
   .sms-hint i{flex-shrink:0;margin-top:1px}
+
+  /* payment history */
   .pay-hist{margin-top:14px}
   .pay-hist h4{font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
   .pay-item{display:flex;justify-content:space-between;font-size:13px;padding:7px 10px;background:#fffaf3;border-radius:8px;margin-bottom:5px;font-weight:600}
   .pay-item .date{color:var(--muted);font-weight:500}
+
   .footer-note{text-align:center;margin-top:36px;font-size:12px;color:var(--muted);font-weight:500}
   .footer-note i{color:var(--gold)}
+
   .toast{
     position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
     background:#2b1d12;color:#fff;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;
@@ -217,6 +227,8 @@
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .toast i{color:var(--gold)}
+
+  /* ---------- PIN lock screen ---------- */
   .lock-overlay{
     position:fixed;inset:0;z-index:300;
     background:linear-gradient(135deg,#fff7ed 0%,#fef3c7 55%,#fde68a 100%);
@@ -246,8 +258,7 @@
     text-decoration:underline;cursor:pointer;margin-top:12px;font-weight:600;
   }
   .forgot-link:hover{color:var(--accent)}
-  .install-prompt{position:fixed;bottom:20px;left:20px;right:20px;background:#fff;border-radius:16px;padding:14px 18px;box-shadow:0 10px 30px rgba(0,0,0,.15);z-index:500;display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:1px solid var(--border)}
-  .install-prompt.show{display:flex}
+
   @media (max-width:560px){
     .field-row{grid-template-columns:1fr}
     .tpl-btns{grid-template-columns:1fr}
@@ -256,6 +267,7 @@
 </style>
 </head>
 <body>
+
 <header class="hero">
   <svg class="sun" viewBox="0 0 200 200" fill="none">
     <circle cx="100" cy="100" r="42" fill="#fbbf24"/>
@@ -274,11 +286,16 @@
         <p class="tagline">Your trusted loan record book — warm reminders, one tap away. Track every loan, interest, and payment. Send gentle SMS reminders in a single click.</p>
       </div>
     </div>
-    <span class="hero-stats-note"><i class="ri-shield-check-line"></i> Records are saved privately on this device. Tap <b>Backup</b> to keep a copy.</span>
+    <span class="hero-stats-note"><i class="ri-shield-check-line"></i> Records are saved privately on this device. Tap <b>Backup</b> to keep a copy in your email or Google Drive.</span>
   </div>
 </header>
+
 <div class="wrap">
+
+  <!-- Stats -->
   <div class="stats" id="stats"></div>
+
+  <!-- Toolbar -->
   <div class="toolbar">
     <div class="search">
       <i class="ri-search-line"></i>
@@ -290,28 +307,20 @@
       <button class="tab" data-filter="overdue">Overdue <span class="count" id="cOverdue">0</span></button>
       <button class="tab" data-filter="paid">Paid <span class="count" id="cPaid">0</span></button>
     </div>
-    <button class="btn btn-secondary" id="backupBtn"><i class="ri-save-3-line"></i> Backup</button>
-    <button class="btn btn-secondary" id="restoreBtn"><i class="ri-inbox-archive-line"></i> Restore</button>
-    <button class="btn btn-secondary" id="pinBtn"><i class="ri-lock-2-line"></i> PIN Lock</button>
+    <button class="btn btn-secondary" id="backupBtn" title="Download a backup file of all records"><i class="ri-save-3-line"></i> Backup</button>
+    <button class="btn btn-secondary" id="restoreBtn" title="Restore records from a backup file"><i class="ri-inbox-archive-line"></i> Restore</button>
+    <button class="btn btn-secondary" id="pinBtn" title="Set a PIN lock (like a login)"><i class="ri-lock-2-line"></i> PIN Lock</button>
     <button class="btn btn-secondary" id="exportBtn"><i class="ri-download-2-line"></i> Export CSV</button>
     <button class="btn btn-primary" id="addBtn"><i class="ri-add-line"></i> Add Loan</button>
     <input type="file" id="restoreFile" accept=".json,application/json" style="display:none">
   </div>
+
+  <!-- Loan list -->
   <div class="loan-list" id="loanList"></div>
+
   <p class="footer-note"><i class="ri-sun-line"></i> Built with warmth for Filipino lenders — Maraming salamat po!</p>
 </div>
 
-<!-- Install Prompt -->
-<div class="install-prompt" id="installPrompt">
-  <strong>📲 Install Pautang Ko</strong>
-  <span>Use offline & faster access</span>
-  <div style="display:flex;gap:8px">
-    <button class="btn btn-green" id="installBtn">Install</button>
-    <button class="btn btn-secondary" id="dismissInstall">Later</button>
-  </div>
-</div>
-
-<!-- Modals follow exactly as your original code -->
 <!-- Add / Edit Loan Modal -->
 <div class="modal-overlay" id="loanModal">
   <div class="modal">
@@ -327,7 +336,7 @@
       </div>
       <div class="field">
         <label>Phone Number (for SMS reminders)</label>
-        <input type="tel" id="f_phone" placeholder="e.g. 0917 123 4567" required>
+        <input type="tel" id="f_phone" placeholder="e.g. 0917 123 4567 or +639171234567" required>
       </div>
       <div class="field-row">
         <div class="field">
@@ -343,8 +352,8 @@
         <label>Interest Type</label>
         <select id="f_rateType">
           <option value="one">One-time (fixed % of principal)</option>
-          <option value="month" selected>Per month</option>
-          <option value="year">Per year</option>
+          <option value="month" selected>Per month (based on loan term)</option>
+          <option value="year">Per year (based on loan term)</option>
         </select>
       </div>
       <div class="field-row">
@@ -358,7 +367,7 @@
         </div>
       </div>
       <div class="calc-preview" id="calcPreview">
-        <small><i class="ri-calculator-line"></i> Auto-computed</small>
+        <small><i class="ri-calculator-line"></i> Interest + Total automatically computed</small>
         <b id="calcText">₱0.00 total</b>
       </div>
       <div class="field">
@@ -368,7 +377,7 @@
     </div>
     <div class="modal-foot">
       <button class="btn btn-secondary" data-close="loanModal">Cancel</button>
-      <button class="btn btn-primary" id="saveLoanBtn">Save Loan</button>
+      <button class="btn btn-primary" id="saveLoanBtn"><i class="ri-save-line"></i> Save Loan</button>
     </div>
   </div>
 </div>
@@ -383,19 +392,19 @@
     <div class="modal-body">
       <div class="sms-to">To: <b id="smsToName"></b> · <span id="smsToPhone"></span></div>
       <div class="tpl-btns">
-        <button class="tpl-btn active" data-tpl="upcoming"><i class="ri-calendar-check-line"></i> Upcoming</button>
-        <button class="tpl-btn" data-tpl="overdue"><i class="ri-alarm-warning-line"></i> Past Due</button>
-        <button class="tpl-btn" data-tpl="confirm"><i class="ri-checkbox-circle-line"></i> Payment Confirmed</button>
+        <button class="tpl-btn active" data-tpl="upcoming"><i class="ri-calendar-check-line"></i> Upcoming Due</button>
+        <button class="tpl-btn" data-tpl="overdue"><i class="ri-alarm-warning-line"></i> Past Due Follow-up</button>
+        <button class="tpl-btn" data-tpl="confirm"><i class="ri-checkbox-circle-line"></i> Payment Received</button>
       </div>
       <div class="field">
-        <label>Message</label>
+        <label>Message (you can edit before sending)</label>
         <textarea id="smsText"></textarea>
       </div>
-      <div class="sms-hint">Standard SMS rates apply. Your messaging app opens with pre-filled text.</div>
+      <div class="sms-hint"><i class="ri-information-line"></i> Tapping "Open SMS App" will open your phone's messaging app with this message ready. Just press send. Standard SMS rates apply.</div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-secondary" id="copyMsgBtn">Copy Text</button>
-      <button class="btn btn-green" id="sendSmsBtn">Open SMS App</button>
+      <button class="btn btn-secondary" id="copyMsgBtn"><i class="ri-file-copy-line"></i> Copy Text</button>
+      <button class="btn btn-green" id="sendSmsBtn"><i class="ri-message-3-line"></i> Open SMS App</button>
     </div>
   </div>
 </div>
@@ -413,7 +422,7 @@
       <div class="field-row">
         <div class="field">
           <label>Amount Paid (₱)</label>
-          <input type="number" id="p_amount" min="0" step="any" required>
+          <input type="number" id="p_amount" min="0" step="any" placeholder="1000" required>
         </div>
         <div class="field">
           <label>Date</label>
@@ -424,7 +433,7 @@
     </div>
     <div class="modal-foot">
       <button class="btn btn-secondary" data-close="payModal">Cancel</button>
-      <button class="btn btn-green" id="savePayBtn">Record Payment</button>
+      <button class="btn btn-green" id="savePayBtn"><i class="ri-check-line"></i> Record Payment</button>
     </div>
   </div>
 </div>
@@ -434,10 +443,10 @@
   <div class="lock-card">
     <div class="sun-icon"><i class="ri-lock-2-line"></i></div>
     <h2>Pautang Ko</h2>
-    <p>Enter PIN to open your record book</p>
-    <input type="password" id="lockPin" class="pin-input" inputmode="numeric" maxlength="6" placeholder="••••">
+    <p>Enter your PIN to open your record book</p>
+    <input type="password" id="lockPin" class="pin-input" inputmode="numeric" maxlength="6" placeholder="&#8226;&#8226;&#8226;&#8226;">
     <div class="lock-error" id="lockError"></div>
-    <button class="btn btn-primary" id="unlockBtn" style="width:100%">Unlock</button>
+    <button class="btn btn-primary" id="unlockBtn" style="width:100%;justify-content:center"><i class="ri-key-2-line"></i> Unlock</button>
     <button class="forgot-link" id="forgotPinBtn">Forgot PIN?</button>
   </div>
 </div>
@@ -452,22 +461,22 @@
     <div class="modal-body">
       <div class="field" id="pinCurrentField" style="display:none">
         <label>Current PIN</label>
-        <input type="password" id="pinCurrent" inputmode="numeric" maxlength="6">
+        <input type="password" id="pinCurrent" inputmode="numeric" maxlength="6" placeholder="Enter current PIN">
       </div>
       <div class="field">
-        <label>New PIN (4–6 digits)</label>
-        <input type="password" id="pinNew" inputmode="numeric" maxlength="6">
+        <label>New PIN (4-6 digits)</label>
+        <input type="password" id="pinNew" inputmode="numeric" maxlength="6" placeholder="e.g. 1234">
       </div>
       <div class="field">
         <label>Confirm New PIN</label>
-        <input type="password" id="pinConfirm" inputmode="numeric" maxlength="6">
+        <input type="password" id="pinConfirm" inputmode="numeric" maxlength="6" placeholder="Repeat new PIN">
       </div>
-      <div class="sms-hint">⚠️ If you forget your PIN, records can't be recovered. Always keep a Backup.</div>
-      <button class="forgot-link" id="removePinBtn" style="display:none">Remove PIN lock</button>
+      <div class="sms-hint"><i class="ri-information-line"></i> If you forget your PIN, your records cannot be opened. Always keep a <b>Backup</b> file saved in your email or Google Drive.</div>
+      <button class="forgot-link" id="removePinBtn" style="display:none">Remove PIN lock instead</button>
     </div>
     <div class="modal-foot">
       <button class="btn btn-secondary" data-close="pinModal">Cancel</button>
-      <button class="btn btn-primary" id="savePinBtn">Save PIN</button>
+      <button class="btn btn-primary" id="savePinBtn"><i class="ri-lock-2-line"></i> Save PIN</button>
     </div>
   </div>
 </div>
@@ -475,42 +484,17 @@
 <div class="toast" id="toast"><i class="ri-checkbox-circle-fill"></i> <span id="toastMsg"></span></div>
 
 <script>
-// Register Service Worker for PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('Pautang Ko SW registered'))
-      .catch(err => console.log('SW registration failed:', err));
-  });
-}
-
-// Install prompt
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('installPrompt').classList.add('show');
-});
-document.getElementById('installBtn')?.addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  document.getElementById('installPrompt').classList.remove('show');
-});
-document.getElementById('dismissInstall')?.addEventListener('click', () => {
-  document.getElementById('installPrompt').classList.remove('show');
-});
-
 (function(){
   "use strict";
+
   var STORAGE_KEY = "pautangKo_loans_v1";
   var loans = [];
   var currentFilter = "all";
   var searchQuery = "";
   var smsLoanId = null;
   var smsTpl = "upcoming";
-  
+
+  /* ---------- helpers ---------- */
   function $(id){ return document.getElementById(id); }
   function fmt(n){
     n = Number(n) || 0;
@@ -538,7 +522,8 @@ document.getElementById('dismissInstall')?.addEventListener('click', () => {
     clearTimeout(t._timer);
     t._timer = setTimeout(function(){ t.classList.remove("show"); }, 2600);
   }
-  
+
+  /* ---------- loan calculations ---------- */
   function calcLoan(L){
     var principal = Number(L.principal) || 0;
     var rate = Number(L.rate) || 0;
@@ -558,7 +543,8 @@ document.getElementById('dismissInstall')?.addEventListener('click', () => {
     var status = (balance <= 0.01) ? "paid" : (daysOverdue > 0 ? "overdue" : "pending");
     return {interest:interest, total:total, paid:paid, balance:balance, status:status, daysOverdue:daysOverdue, termDays:termDays};
   }
-  
+
+  /* ---------- storage ---------- */
   function save(){
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(loans)); } catch(e){}
   }
@@ -568,7 +554,8 @@ document.getElementById('dismissInstall')?.addEventListener('click', () => {
       if (raw) loans = JSON.parse(raw) || [];
     } catch(e){ loans = []; }
   }
-  
+
+  /* ---------- stats ---------- */
   function renderStats(){
     var totPrincipal = 0, totInterest = 0, totPending = 0, totCollected = 0;
     var counts = {all:0, pending:0, overdue:0, paid:0};
@@ -582,8 +569,8 @@ document.getElementById('dismissInstall')?.addEventListener('click', () => {
       counts[c.status]++;
     });
     $("stats").innerHTML =
-      '<div class="stat orange"><div class="stat-label"><i class="ri-wallet-3-line"></i> Total Lent</div><div class="stat-value">'+fmt(totPrincipal)+'</div><div class="stat-sub">'+counts.all+' loan(s)</div></div>' +
-      '<div class="stat"><div class="stat-label"><i class="ri-percent-line"></i> Interest Due</div><div class="stat-value">'+fmt(totInterest)+'</div><div class="stat-sub">auto-computed</div></div>' +
+      '<div class="stat orange"><div class="stat-label"><i class="ri-wallet-3-line"></i> Total Lent</div><div class="stat-value">'+fmt(totPrincipal)+'</div><div class="stat-sub">'+counts.all+' loan record(s)</div></div>' +
+      '<div class="stat"><div class="stat-label"><i class="ri-percent-line"></i> Interest Due</div><div class="stat-value">'+fmt(totInterest)+'</div><div class="stat-sub">automatically computed</div></div>' +
       '<div class="stat red"><div class="stat-label"><i class="ri-time-line"></i> Pending to Collect</div><div class="stat-value">'+fmt(totPending)+'</div><div class="stat-sub">'+counts.overdue+' overdue</div></div>' +
       '<div class="stat green"><div class="stat-label"><i class="ri-hand-coin-line"></i> Collected</div><div class="stat-value">'+fmt(totCollected)+'</div><div class="stat-sub">'+counts.paid+' fully paid</div></div>';
     $("cAll").textContent = counts.all;
@@ -591,7 +578,8 @@ document.getElementById('dismissInstall')?.addEventListener('click', () => {
     $("cOverdue").textContent = counts.overdue;
     $("cPaid").textContent = counts.paid;
   }
-  
+
+  /* ---------- loan list ---------- */
   function renderList(){
     var list = $("loanList");
     var filtered = loans.filter(function(L){
@@ -600,19 +588,21 @@ document.getElementById('dismissInstall')?.addEventListener('click', () => {
       if (searchQuery && L.name.toLowerCase().indexOf(searchQuery) === -1) return false;
       return true;
     });
+    // sort: overdue first, then by due date ascending, paid last
     filtered.sort(function(a,b){
       var ca = calcLoan(a), cb = calcLoan(b);
       var rank = {overdue:0, pending:1, paid:2};
       if (rank[ca.status] !== rank[cb.status]) return rank[ca.status] - rank[cb.status];
       return (a.dueDate < b.dueDate ? -1 : a.dueDate > b.dueDate ? 1 : 0);
     });
+
     if (filtered.length === 0){
       var isEmpty = loans.length === 0;
       list.innerHTML =
         '<div class="empty">' +
           '<div class="empty-icon"><i class="ri-book-open-line"></i></div>' +
           '<h3>'+(isEmpty ? "Your record book is empty" : "No loans match this view")+'</h3>' +
-          '<p>'+(isEmpty ? "Add your first loan — interest & totals auto-calculated." : "Try a different filter or clear search.")+'</p>' +
+          '<p>'+(isEmpty ? "Add your first loan entry — interest and totals are calculated automatically, and reminders are one tap away." : "Try a different filter or clear your search.")+'</p>' +
           '<div class="empty-actions">' +
             (isEmpty ? '<button class="btn btn-primary" id="emptyAdd"><i class="ri-add-line"></i> Add First Loan</button>' +
              '<button class="btn btn-secondary" id="loadSample"><i class="ri-flashlight-line"></i> Load Sample Data</button>' : '') +
@@ -622,6 +612,7 @@ document.getElementById('dismissInstall')?.addEventListener('click', () => {
       var ls = $("loadSample"); if (ls) ls.addEventListener("click", loadSample);
       return;
     }
+
     list.innerHTML = filtered.map(function(L){
       var c = calcLoan(L);
       var statusPill = c.status === "paid"
@@ -633,7 +624,10 @@ document.getElementById('dismissInstall')?.addEventListener('click', () => {
       return (
       '<div class="loan-card '+c.status+'" data-id="'+L.id+'">' +
         '<div class="loan-top">' +
-          '<div class="loan-who"><h3>'+esc(L.name)+'</h3><div class="phone"><i class="ri-phone-line"></i> '+esc(L.phone)+'</div></div>' +
+          '<div class="loan-who">' +
+            '<h3>'+esc(L.name)+'</h3>' +
+            '<div class="phone"><i class="ri-phone-line"></i> '+esc(L.phone)+'</div>' +
+          '</div>' +
           statusPill +
         '</div>' +
         '<div class="amounts">' +
@@ -646,4 +640,364 @@ document.getElementById('dismissInstall')?.addEventListener('click', () => {
           '<span><i class="ri-calendar-line"></i> Lent: '+L.dateLent+'</span>' +
           '<span><i class="ri-calendar-check-line"></i> Due: '+L.dueDate+'</span>' +
           '<span><i class="ri-percent-line"></i> '+Number(L.rate)+'% '+(L.rateType==="one"?"one-time":L.rateType==="month"?"/month":"/year")+'</span>' +
-          (c.paid>0 ? '<span><i class="ri-hand-coin-line"></i> Paid: '+fmt(c.paid)+'</span>' :
+          (c.paid>0 ? '<span><i class="ri-hand-coin-line"></i> Paid: '+fmt(c.paid)+'</span>' : '') +
+        '</div>' +
+        notesLine +
+        '<div class="loan-actions">' +
+          '<button class="icon-btn sms" data-act="sms"><i class="ri-message-3-line"></i> Send SMS Reminder</button>' +
+          (c.status !== "paid" ? '<button class="icon-btn" data-act="pay"><i class="ri-hand-coin-line"></i> Record Payment</button>' : '') +
+          '<button class="icon-btn" data-act="edit"><i class="ri-pencil-line"></i> Edit</button>' +
+          '<button class="icon-btn del" data-act="del"><i class="ri-delete-bin-line"></i> Delete</button>' +
+        '</div>' +
+      '</div>');
+    }).join("");
+
+    // bind actions
+    list.querySelectorAll(".loan-card").forEach(function(card){
+      var id = card.getAttribute("data-id");
+      card.querySelectorAll("[data-act]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var act = btn.getAttribute("data-act");
+          var L = loans.find(function(x){ return x.id === id; });
+          if (!L) return;
+          if (act === "sms") openSmsModal(L);
+          else if (act === "pay") openPayModal(L);
+          else if (act === "edit") openLoanModal(L);
+          else if (act === "del"){
+            if (confirm("Delete loan record for " + L.name + "? This cannot be undone.")){
+              loans = loans.filter(function(x){ return x.id !== id; });
+              save(); renderAll(); toast("Record deleted");
+            }
+          }
+        });
+      });
+    });
+  }
+
+  function renderAll(){ renderStats(); renderList(); }
+
+  /* ---------- add / edit loan ---------- */
+  function openLoanModal(L){
+    $("loanModalTitle").textContent = L ? "Edit Loan" : "Add New Loan";
+    $("f_id").value = L ? L.id : "";
+    $("f_name").value = L ? L.name : "";
+    $("f_phone").value = L ? L.phone : "";
+    $("f_principal").value = L ? L.principal : "";
+    $("f_rate").value = L ? L.rate : 5;
+    $("f_rateType").value = L ? L.rateType : "month";
+    $("f_dateLent").value = L ? L.dateLent : todayStr();
+    $("f_dueDate").value = L ? L.dueDate : addDays(todayStr(), 30);
+    $("f_notes").value = L ? (L.notes || "") : "";
+    updateCalcPreview();
+    openModal("loanModal");
+  }
+
+  function updateCalcPreview(){
+    var principal = Number($("f_principal").value) || 0;
+    var rate = Number($("f_rate").value) || 0;
+    var rateType = $("f_rateType").value;
+    var dateLent = $("f_dateLent").value || todayStr();
+    var dueDate = $("f_dueDate").value || addDays(dateLent, 30);
+    var c = calcLoan({principal:principal, rate:rate, rateType:rateType, dateLent:dateLent, dueDate:dueDate, payments:[]});
+    $("calcText").textContent = "Interest " + fmt(c.interest) + " · Total " + fmt(c.total);
+  }
+
+  $("saveLoanBtn").addEventListener("click", function(){
+    var name = $("f_name").value.trim();
+    var phone = $("f_phone").value.trim();
+    var principal = Number($("f_principal").value);
+    if (!name) { toast("Please enter borrower name"); $("f_name").focus(); return; }
+    if (!phone) { toast("Please enter phone number for SMS"); $("f_phone").focus(); return; }
+    if (!principal || principal <= 0) { toast("Please enter a valid principal amount"); $("f_principal").focus(); return; }
+    var id = $("f_id").value;
+    var data = {
+      name: name, phone: phone, principal: principal,
+      rate: Number($("f_rate").value) || 0,
+      rateType: $("f_rateType").value,
+      dateLent: $("f_dateLent").value || todayStr(),
+      dueDate: $("f_dueDate").value || addDays(todayStr(), 30),
+      notes: $("f_notes").value.trim()
+    };
+    if (id){
+      var idx = loans.findIndex(function(x){ return x.id === id; });
+      if (idx > -1) loans[idx] = Object.assign({}, loans[idx], data);
+    } else {
+      data.id = uid();
+      data.payments = [];
+      data.createdAt = Date.now();
+      loans.push(data);
+    }
+    save(); renderAll(); closeModal("loanModal");
+    toast(id ? "Loan updated" : "Loan added to your record book");
+  });
+
+  ["f_principal","f_rate","f_rateType","f_dateLent","f_dueDate"].forEach(function(id){
+    $(id).addEventListener("input", updateCalcPreview);
+    $(id).addEventListener("change", updateCalcPreview);
+  });
+
+  /* ---------- payments ---------- */
+  function openPayModal(L){
+    $("p_id").value = L.id;
+    $("p_name").textContent = L.name;
+    $("p_balance").textContent = fmt(calcLoan(L).balance);
+    $("p_amount").value = "";
+    $("p_date").value = todayStr();
+    var hist = $("payHist");
+    if (L.payments && L.payments.length){
+      hist.innerHTML = "<h4>Payment History</h4>" + L.payments.map(function(p){
+        return '<div class="pay-item"><span>'+fmt(p.amount)+'</span><span class="date">'+p.date+'</span></div>';
+      }).join("");
+    } else {
+      hist.innerHTML = "";
+    }
+    openModal("payModal");
+  }
+
+  $("savePayBtn").addEventListener("click", function(){
+    var id = $("p_id").value;
+    var amount = Number($("p_amount").value);
+    if (!amount || amount <= 0){ toast("Enter a valid amount"); return; }
+    var L = loans.find(function(x){ return x.id === id; });
+    if (!L) return;
+    L.payments = L.payments || [];
+    L.payments.push({id:uid(), amount:amount, date:$("p_date").value || todayStr()});
+    save(); renderAll(); closeModal("payModal");
+    var c = calcLoan(L);
+    toast(c.status === "paid" ? "Loan fully paid — salamat po!" : "Payment recorded");
+  });
+
+  /* ---------- SMS ---------- */
+  function buildMessage(L, tpl){
+    var c = calcLoan(L);
+    var dueNice = new Date(L.dueDate + "T00:00:00").toLocaleDateString("en-PH", {month:"long", day:"numeric", year:"numeric"});
+    if (tpl === "upcoming"){
+      return "Hello " + L.name + "! Hope you're doing well. This is a gentle reminder regarding your loan: Principal " + fmt(L.principal) + " + Interest " + fmt(c.interest) + " = Total " + fmt(c.total) + ", due on " + dueNice + ". Remaining balance: " + fmt(c.balance) + ". Please let me know if you have any questions. Thank you so much!";
+    }
+    if (tpl === "overdue"){
+      return "Hi " + L.name + "! Just checking in — your balance of " + fmt(c.balance) + " was due on " + dueNice + " (" + c.daysOverdue + " days ago). Whenever you're ready, let's arrange the payment. No pressure, just keeping in touch. Salamat po!";
+    }
+    // confirm
+    var lastPay = L.payments && L.payments.length ? L.payments[L.payments.length-1].amount : c.paid;
+    return "Hi " + L.name + "! Received with thanks — your payment of " + fmt(lastPay) + " is confirmed. Remaining balance: " + fmt(c.balance) + (c.balance <= 0.01 ? " — fully settled! " : ". ") + "Maraming salamat po!";
+  }
+
+  function openSmsModal(L){
+    smsLoanId = L.id;
+    smsTpl = calcLoan(L).status === "overdue" ? "overdue" : "upcoming";
+    $("smsToName").textContent = L.name;
+    $("smsToPhone").textContent = L.phone;
+    document.querySelectorAll(".tpl-btn").forEach(function(b){
+      b.classList.toggle("active", b.getAttribute("data-tpl") === smsTpl);
+    });
+    $("smsText").value = buildMessage(L, smsTpl);
+    openModal("smsModal");
+  }
+
+  document.querySelectorAll(".tpl-btn").forEach(function(b){
+    b.addEventListener("click", function(){
+      smsTpl = b.getAttribute("data-tpl");
+      document.querySelectorAll(".tpl-btn").forEach(function(x){ x.classList.toggle("active", x === b); });
+      var L = loans.find(function(x){ return x.id === smsLoanId; });
+      if (L) $("smsText").value = buildMessage(L, smsTpl);
+    });
+  });
+
+  $("sendSmsBtn").addEventListener("click", function(){
+    var L = loans.find(function(x){ return x.id === smsLoanId; });
+    if (!L) return;
+    var msg = $("smsText").value;
+    var phone = String(L.phone).replace(/\s+/g,"");
+    var body = encodeURIComponent(msg);
+    // iOS uses &body=, Android uses ?body=
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var link = isIOS ? "sms:" + phone + "&body=" + body : "sms:" + phone + "?body=" + body;
+    window.location.href = link;
+    toast("Opening your SMS app...");
+  });
+
+  $("copyMsgBtn").addEventListener("click", function(){
+    var text = $("smsText").value;
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ toast("Message copied to clipboard"); });
+    } else {
+      $("smsText").select();
+      try { document.execCommand("copy"); toast("Message copied"); } catch(e){ toast("Copy failed — select and copy manually"); }
+    }
+  });
+
+  /* ---------- export CSV ---------- */
+  $("exportBtn").addEventListener("click", function(){
+    if (!loans.length){ toast("No records to export yet"); return; }
+    var rows = [["Name","Phone","Principal","Interest Rate","Rate Type","Date Lent","Due Date","Interest","Total Due","Amount Paid","Balance","Status","Notes"]];
+    loans.forEach(function(L){
+      var c = calcLoan(L);
+      rows.push([L.name, L.phone, L.principal, L.rate+"%", L.rateType, L.dateLent, L.dueDate, c.interest.toFixed(2), c.total.toFixed(2), c.paid.toFixed(2), c.balance.toFixed(2), c.status, (L.notes||"").replace(/"/g,'""')]);
+    });
+    var csv = rows.map(function(r){ return r.map(function(v){ return '"' + String(v) + '"'; }).join(","); }).join("\n");
+    var blob = new Blob(["\ufeff" + csv], {type:"text/csv;charset=utf-8;"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "pautang-ko-records-" + todayStr() + ".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("CSV exported — open in Excel or Google Sheets");
+  });
+
+  /* ---------- sample data ---------- */
+  function loadSample(){
+    var t = todayStr();
+    loans = [
+      {id:uid(), name:"Maria Santos", phone:"0917 123 4567", principal:5000, rate:5, rateType:"month", dateLent:addDays(t,-20), dueDate:addDays(t,10), notes:"Sari-sari store restock", payments:[], createdAt:Date.now()},
+      {id:uid(), name:"Juan dela Cruz", phone:"0928 987 6543", principal:2000, rate:0, rateType:"one", dateLent:addDays(t,-45), dueDate:addDays(t,-15), notes:"Emergency medical", payments:[{id:uid(), amount:500, date:addDays(t,-5)}], createdAt:Date.now()},
+      {id:uid(), name:"Ana Reyes", phone:"0919 555 1234", principal:10000, rate:10, rateType:"one", dateLent:addDays(t,-60), dueDate:addDays(t,-30), notes:"Tuition fee", payments:[{id:uid(), amount:11000, date:addDays(t,-28)}], createdAt:Date.now()}
+    ];
+    save(); renderAll(); toast("Sample data loaded — edit or delete as you like");
+  }
+
+  /* ---------- modal helpers ---------- */
+  function openModal(id){ $(id).classList.add("open"); }
+  function closeModal(id){ $(id).classList.remove("open"); }
+  document.querySelectorAll("[data-close]").forEach(function(b){
+    b.addEventListener("click", function(){ closeModal(b.getAttribute("data-close")); });
+  });
+  document.querySelectorAll(".modal-overlay").forEach(function(o){
+    o.addEventListener("click", function(e){ if (e.target === o) o.classList.remove("open"); });
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape") document.querySelectorAll(".modal-overlay.open").forEach(function(o){ o.classList.remove("open"); });
+  });
+
+  /* ---------- toolbar ---------- */
+  $("addBtn").addEventListener("click", function(){ openLoanModal(null); });
+  $("searchInput").addEventListener("input", function(){ searchQuery = this.value.trim().toLowerCase(); renderList(); });
+  document.querySelectorAll(".tab").forEach(function(tab){
+    tab.addEventListener("click", function(){
+      currentFilter = tab.getAttribute("data-filter");
+      document.querySelectorAll(".tab").forEach(function(t){ t.classList.toggle("active", t === tab); });
+      renderList();
+    });
+  });
+
+  /* ---------- PIN lock (login-style protection) ---------- */
+  var PIN_KEY = "pautangKo_pin_v1";
+  function simpleHash(str){
+    var h = 5381;
+    for (var i=0;i<str.length;i++){ h = ((h<<5)+h) + str.charCodeAt(i); h = h & 0xffffffff; }
+    return "h" + (h>>>0).toString(16);
+  }
+  function hashPin(str){
+    if (window.crypto && crypto.subtle && crypto.subtle.digest && window.TextEncoder){
+      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str))
+        .then(function(buf){
+          return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");
+        })
+        .catch(function(){ return simpleHash(str); });
+    }
+    return Promise.resolve(simpleHash(str));
+  }
+  function lockError(msg){ $("lockError").textContent = msg || ""; }
+  function showLock(){ $("lockScreen").classList.remove("hidden"); setTimeout(function(){ $("lockPin").focus(); }, 120); }
+
+  $("unlockBtn").addEventListener("click", function(){
+    var pin = $("lockPin").value.trim();
+    if (!pin || pin.length < 4){ lockError("PIN must be at least 4 digits"); return; }
+    hashPin(pin).then(function(h){
+      if (h === localStorage.getItem(PIN_KEY)){
+        $("lockScreen").classList.add("hidden");
+        $("lockPin").value = ""; lockError(""); renderAll();
+        toast("Welcome back!");
+      } else {
+        lockError("Wrong PIN — try again.");
+        $("lockPin").value = ""; $("lockPin").focus();
+      }
+    });
+  });
+  $("lockPin").addEventListener("keydown", function(e){ if (e.key === "Enter") $("unlockBtn").click(); });
+  $("forgotPinBtn").addEventListener("click", function(){
+    if (confirm("Forgot your PIN? This will ERASE all records on this device. You can restore them later from a backup file. Continue?")){
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(PIN_KEY);
+      location.reload();
+    }
+  });
+
+  /* ---------- PIN modal (set / change / remove) ---------- */
+  $("pinBtn").addEventListener("click", function(){
+    var hasPin = !!localStorage.getItem(PIN_KEY);
+    $("pinModalTitle").textContent = hasPin ? "Change PIN" : "Set PIN Lock";
+    $("pinCurrentField").style.display = hasPin ? "block" : "none";
+    $("removePinBtn").style.display = hasPin ? "inline-block" : "none";
+    $("pinCurrent").value = ""; $("pinNew").value = ""; $("pinConfirm").value = "";
+    openModal("pinModal");
+  });
+  $("savePinBtn").addEventListener("click", function(){
+    var hasPin = !!localStorage.getItem(PIN_KEY);
+    var cur = $("pinCurrent").value.trim();
+    var nw = $("pinNew").value.trim();
+    var cf = $("pinConfirm").value.trim();
+    if (hasPin && !cur){ toast("Enter your current PIN"); return; }
+    if (!/^\d{4,6}$/.test(nw)){ toast("New PIN must be 4-6 digits"); return; }
+    if (nw !== cf){ toast("New PINs do not match"); return; }
+    var doSave = function(){
+      hashPin(nw).then(function(h){
+        localStorage.setItem(PIN_KEY, h);
+        closeModal("pinModal");
+        toast("PIN lock enabled — don't forget it!");
+      });
+    };
+    if (hasPin){
+      hashPin(cur).then(function(h){
+        if (h !== localStorage.getItem(PIN_KEY)){ toast("Current PIN is wrong"); return; }
+        doSave();
+      });
+    } else { doSave(); }
+  });
+  $("removePinBtn").addEventListener("click", function(){
+    var cur = prompt("Enter your current PIN to remove the lock:");
+    if (!cur) return;
+    hashPin(String(cur).trim()).then(function(h){
+      if (h === localStorage.getItem(PIN_KEY)){
+        localStorage.removeItem(PIN_KEY);
+        closeModal("pinModal");
+        toast("PIN lock removed");
+      } else { toast("Wrong PIN"); }
+    });
+  });
+
+  /* ---------- backup & restore (so records never get lost) ---------- */
+  $("backupBtn").addEventListener("click", function(){
+    if (!loans.length){ toast("No records to back up yet"); return; }
+    var data = {app:"Pautang Ko", version:1, exportedAt:new Date().toISOString(), loans:loans};
+    var blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "pautang-ko-backup-" + todayStr() + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    toast("Backup downloaded — save it in email / Google Drive!");
+  });
+  $("restoreBtn").addEventListener("click", function(){ $("restoreFile").click(); });
+  $("restoreFile").addEventListener("change", function(e){
+    var f = e.target.files[0]; if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      try {
+        var data = JSON.parse(ev.target.result);
+        var arr = Array.isArray(data) ? data : (data.loans || []);
+        if (!Array.isArray(arr) || !arr.length) throw new Error("empty");
+        if (confirm("Restore " + arr.length + " record(s)? This REPLACES the current records on this device.")){
+          loans = arr; save(); renderAll();
+          toast("Restored " + arr.length + " record(s)");
+        }
+      } catch(err){ toast("Not a valid backup file"); }
+    };
+    reader.readAsText(f);
+    e.target.value = "";
+  });
+
+  /* ---------- init ---------- */
+  load();
+  if (localStorage.getItem(PIN_KEY)){ showLock(); } else { renderAll(); }
+})();
+</script>
+</body>
+</html>
